@@ -35,10 +35,10 @@ class RootStore {
   ##  Functions
   ##
   ##    loadApp
-  ##    promiseAll
   /*#######################################################*/
   loadApp() {
-    console.log("Your browser: " + browser());
+    const result = browser();
+    console.log("Your browser: " , result);
 
     if(navigator.cookiesEnabled) {
       alertify.delay(0).error("Please activate cookies in your browser! Refresh after");

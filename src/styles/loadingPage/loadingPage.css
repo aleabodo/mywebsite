@@ -1,0 +1,136 @@
+.PageLoading {
+  position: fixed;
+  display: block;
+  width: 100%;
+  height: 100vh;
+  background-color: black;
+  top: 0;
+  z-index: 2000;
+}
+
+.PageLoading_Element {
+  height: 100vh;
+  top: 0;
+  position: fixed;
+  width: 50%;
+  display: block;
+  animation-delay: 1s;
+}
+
+
+/*
+* logo
+*/
+.PageLoading_Logo {
+  z-index: 1001;
+  display: block;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  top: 40vh;
+  width: 150px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.PageLoading_Logo-fadeOut {
+  opacity: 0;
+  transform: scale(1.5);
+  animation: pageLoadingLogo-fadeOut 2s ease-in-out;
+}
+@keyframes pageLoadingLogo-fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+.PageLoading_1 {
+  background-color: black;
+  z-index: 1000;
+  animation-duration: 1.5s;
+  -webkit-animation-duration: 1.5s;
+  -moz-animation-duration: 1.5s;
+}
+.PageLoading_2 {
+  background-color: rgb(5, 5, 5);
+  z-index: 999;
+  animation-duration: 2s;
+  -webkit-animation-duration: 2s;
+  -moz-animation-duration: 2s;
+}
+.PageLoading_3 {
+  background-color: rgb(10, 10, 10);
+  z-index: 998;
+  animation-duration: 2.5s;
+  -webkit-animation-duration: 2.5s;
+  -moz-animation-duration: 2.5s;
+}
+.PageLoading_4 {
+  background-color: rgb(15, 15, 15);
+  z-index: 997;
+  animation-duration: 3s;
+  -webkit-animation-duration: 3s;
+  -moz-animation-duration: 3s;
+}
+.PageLoading_5 {
+  background-color: rgb(20, 20, 20);
+  z-index: 996;
+  animation-duration: 3.5s;
+  -webkit-animation-duration: 3.5s;
+  -moz-animation-duration: 3.5s;
+}
+
+.PageLoading_left {
+  transform: translateX(-100%);
+  animation-name: pageLoading-left;
+  -webkit-animation-name: pageLoading-left;
+  -moz-animation-name: pageLoading-left;
+}
+.PageLoading_right {
+  left: 50%;
+  transform: translateX(100%);
+  animation-name: pageLoading-right;
+  -webkit-animation-name: pageLoading-right;
+  -moz-animation-name: pageLoading-right;
+}
+
+
+/*
+* Animations
+*/
+@keyframes pageLoading-left {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes pageLoading-right {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+
+/*
+* Responsive
+*/
+@media (min-width: 700px) {
+
+}

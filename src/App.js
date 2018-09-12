@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { observer, inject } from 'mobx-react';
 
 /*
 * Functions import
@@ -7,8 +8,24 @@ import React, { Component } from 'react';
 /*
 * Components import
 */
-import Loading from './components/Loading';
+import Loading from './pages/Loading';
 import Main from './pages/Main';
+import Login from './pages/Login';
+
+
+/*
+###############################
+Components -- START
+###############################
+*/
+
+/*
+###############################
+Components -- END
+###############################
+*/
+
+
 
 const App = inject("rootStore") ( observer(
   class App extends Component {
@@ -31,6 +48,7 @@ const App = inject("rootStore") ( observer(
     }
 
     render() {
+      console.log(this.stores.authStore.userData.uid)
       if(this.stores.rootStore.isLoaded.app === true) {
         if(this.stores.authStore.userData.uid !== null) {
           return(<Main />);
@@ -40,7 +58,7 @@ const App = inject("rootStore") ( observer(
       } else {
         return(<Loading />);
       }
-    );
+    }
   }
 ));
 

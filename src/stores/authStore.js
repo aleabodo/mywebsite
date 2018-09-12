@@ -26,15 +26,11 @@ class AuthStore {
   ##  Functions
   ##
   ##    load
-  ##    getUserInfo
-  ##    verifyPhone
+  ##    signIn
   ##    signOut
   /*#######################################################*/
   load() {
     //Load all auth related things
-
-    console.info("Loading authStore");
-    this.stores.rootStore.isLoaded.app = false;
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -59,47 +55,6 @@ class AuthStore {
         console.info("AuthStore loaded");
         this.stores.rootStore.isLoaded.app = true;
       }
-    });
-  }
-
-
-  getUserInfo(userId) {
-    //Returns all user info from firestore.
-    //Param: userId
-    //Returns a promise
-
-    return new Promise(function (resolve, reject) {
-      var docRef = db.collection("users").doc(userId);
-      return docRef.get().then((doc) => {
-        if (doc.exists) {
-          resolve(doc.data());
-        } else {
-          // doc.data() will be undefined in this case
-          alertify.delay(0).error("Base Web doesn't support signing up yet. Please install the mobile app to sign up! Refresh Base Web after!");
-          console.error("User with id " + userId + " not found in user db!");
-          reject()
-        }
-      }).catch(function(error) {
-          console.error("Error getting document:", error);
-          reject()
-      });
-    });
-  }
-
-
-  createSignInRecaptcha(phoneNumber) {
-    firebase.auth().useDeviceLanguage();
-
-    window.recaptchaVerifier = new firebase_orig.auth.RecaptchaVerifier('sign-in-button', {
-      'size': 'invisible',
-      'callback': (response) => {
-        // reCAPTCHA solved, allow signInWithPhoneNumber.
-        this.signIn();
-      }
-    });
-
-    window.recaptchaVerifier.render().then(function(widgetId) {
-      window.recaptchaWidgetId = widgetId;
     });
   }
 

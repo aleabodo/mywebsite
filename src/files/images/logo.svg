@@ -1,0 +1,85 @@
+<svg width="640" height="479.99999999999994" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->
+ <defs>
+  <style type="text/css">
+    <![CDATA[
+
+    .circle {
+      fill: #DA3821;
+      stroke-width: 7;
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 0;
+      animation: circleDraw 2s;
+    }
+
+    .a {
+      opacity: 1;
+      font-size: 24px;
+      animation: fontFadeA 3s;
+    }
+
+    .b {
+      opacity: 1;
+      font-size: 24px;
+      animation: fontFadeB 3s;
+    }
+
+    @keyframes fontFadeA {
+      0% {
+        font-size: 20px;
+        opacity: 0;
+      }
+      40% {
+        opacity: 0;
+        font-size: 20px;
+      }
+      100% {
+        opacity: 1;
+        font-size: 24px;
+      }
+    }
+    @keyframes fontFadeB {
+      0% {
+        opacity: 0;
+        font-size: 20px;
+      }
+      50% {
+        opacity: 0;
+        font-size: 20px;
+      }
+      100% {
+        opacity: 1;
+        font-size: 24px;
+      }
+    }
+
+    @keyframes circleDraw {
+      0% {
+        stroke-dashoffset: 1000;
+        fill: transparent;
+      }
+      30% {
+        fill: transparent;
+      }
+      100% {
+        fill: #DA3821;
+        stroke-dashoffset: 0;
+      }
+    }
+
+    ]]>
+  </style>
+
+ </defs>
+ <title>MyLogo</title>
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="642" height="482" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <path class="circle" id="svg_2" d="m175.64902,246.04444c0,-81.71632 66.19021,-147.90653 147.90652,-147.90653c81.71632,0 147.90653,66.19021 147.90653,147.90653c0,81.71631 -66.19021,147.90652 -147.90653,147.90652c-81.71631,0 -147.90652,-66.19021 -147.90652,-147.90652z" stroke-opacity="null" stroke-linecap="null" stroke-linejoin="null" stroke="#e45f4d" fill-opacity="null"/>
+  <text class="a" font-family="Monospace" font-weight="normal" stroke="#ffffff" transform="matrix(16.070920656049648,0,0,14.324953552691046,-1383.3705537140042,-1389.329317933106) " xml:space="preserve" text-anchor="middle" font-size="24" id="svg_4" y="117.786939" x="101.824642" stroke-linecap="null" stroke-linejoin="null" fill="#ffffff">A</text>
+  <text class="b" font-family="Monospace" id="svg_5" font-weight="normal" stroke="#ffffff" transform="rotate(-19 389.5501403808595,276.68469238281244) matrix(15.254961764346335,0,0,14.324953552691046,-1315.1918495589248,-1390.0460388359616) " xml:space="preserve" text-anchor="middle" font-size="24" y="124.386839" x="111.764076" stroke-linecap="null" stroke-linejoin="null" fill="#ffffff">B</text>
+ </g>
+</svg>
