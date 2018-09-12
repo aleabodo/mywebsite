@@ -9,20 +9,12 @@ require("firebase/storage");
 
 
 var config = {
-  apiKey: "AIzaSyCjWyrIzayUmEBcMcQyPvcXjNDkQONfJA8",
-  authDomain: "base-6d44c.firebaseapp.com",
-  databaseURL: "https://base-6d44c.firebaseio.com",
-  projectId: "base-6d44c",
-  storageBucket: "base-6d44c.appspot.com"
+  apiKey: "AIzaSyDpuphZnuu8U-5CDm1xxdiAFmXukOFav_g",
+  authDomain: "homepagelogin-d83db.firebaseapp.com",
+  databaseURL: "https://homepagelogin-d83db.firebaseio.com",
+  projectId: "homepagelogin-d83db",
+  storageBucket: "homepagelogin-d83db.appspot.com"
 };
-
-/*var config = {
-  apiKey: "AIzaSyDHnDObdPUAOFJfRpgC1tOG59NhheQYUmk",
-  authDomain: "netwoko-staging.firebaseapp.com",
-  databaseURL: "https://netwoko-staging.firebaseio.com",
-  projectId: "netwoko-staging",
-  storageBucket: "netwoko-staging.appspot.com"
-};*/
 
 var fb;
 

@@ -5,7 +5,7 @@ import alertify from 'alertify.js';
 var firebase = require('./fb').fb
 var firebase_orig = require('./fb').firebase
 // Initialize Cloud Firestore through Firebase
-var db = firebase.firestore();
+//var db = firebase.firestore();
 
 
 class AuthStore {
@@ -36,9 +36,10 @@ class AuthStore {
       if (user) {
         //Logged in
 
-        console.info("Logged in as " + user.uid);
+        console.info("Signed in as " + user.uid);
         Object.assign(this.userData, {
-          uid: user.uid
+          uid: user.uid,
+          userData: user
         });
 
         console.info("AuthStore loaded");
@@ -47,7 +48,7 @@ class AuthStore {
       } else {
         //Logged out
 
-        console.info("Logged out");
+        console.info("Signed out");
         Object.assign(this.userData, {
           uid: null
         });
@@ -59,40 +60,46 @@ class AuthStore {
   }
 
 
-  signIn(){
-    //Verify phone number and then sign in
+  signIn(email, password){
+    //Sign in user with email and password
+    
+    return( 
+      new Promise((resolve, reject) => {
+        firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
+          alertify.success("Signed in");
+          resolve();
+        }).catch(function(error) {
+          var errorCode = error.code;
+    
+          if(errorCode === 'auth/wrong-password') {
+            //Wrong password
+            alertify.error("Password incorrect!");
+            reject(error);
+          }
+    
+          if(errorCode === 'auth/user-not-found') {
+            //User not signed up yet. Sign up user now
+    
+            firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
+              alertify.success("Signed in");
 
-    console.info("Verify phone number");
+              var user = firebase.auth().currentUser;
 
-    const phoneNumber = this.userData.phoneCode + this.userData.phoneNumber;
-
-    alertify.log("....Sending verification code....");
-    firebase_orig.auth().signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier).then(function (confirmationResult) {
-      //Code verification prompt
-      alertify.log("You will receive a SMS with a verification code soon.");
-      alertify.prompt("You will receive a SMS with a verification code soon. Please check your SMS on your phone. Enter the code below:",
-        function (val, ev) {
-          ev.preventDefault();
-          //Confirm code
-          confirmationResult.confirm(val).then(function (result){
-            alertify.success("Successfully signed in");
-          }).catch(function () {
-
-            alertify.error("Wrong code!");
-          });
-        },
-        function(ev) {
-          ev.preventDefault();
-
-          alertify.error("You've cancelled the phone verification");
-        }
-      );
-    })
-    .catch(function (error) {
-      window.recaptchaVerifier.reset(window.recaptchaWidgetId);
-      alertify.delay(0).error("Base Web doesn't support signing up yet. Please install the mobile app to sign up! Refresh Base Web after!");
-      console.error(error.code);
-    });
+              user.sendEmailVerification().then(function() {
+                // Confirmation email sent.
+                resolve();
+              }).catch(function(error) {
+                // An error happened.
+                reject(error);
+              });
+            }).catch(function(error) {
+              alertify.error("Something went wrong. Please check your internet connection");
+              reject(error);
+            });
+          }
+        });
+      })
+    ); 
   }
 
 
@@ -100,7 +107,7 @@ class AuthStore {
     //Signes user out
 
     firebase_orig.auth().signOut().then(function(){
-
+      console.log('User signed out');
     }).catch(function(error){
       console.error(error);
     });

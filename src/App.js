@@ -11,6 +11,7 @@ import { observer, inject } from 'mobx-react';
 import Loading from './pages/Loading';
 import Main from './pages/Main';
 import Login from './pages/Login';
+import VerifyEmail from './pages/VerifyEmail';
 
 
 /*
@@ -48,10 +49,13 @@ const App = inject("rootStore") ( observer(
     }
 
     render() {
-      console.log(this.stores.authStore.userData.uid)
       if(this.stores.rootStore.isLoaded.app === true) {
-        if(this.stores.authStore.userData.uid !== null) {
-          return(<Main />);
+        if(this.stores.authStore.userData.uid !== null && this.stores.authStore.userData.userData !== null) {
+          if(this.stores.authStore.userData.userData.emailVerified) {
+            return(<Main />);
+          } else {
+            return(<VerifyEmail />);
+          }
         } else {
           return(<Login />);
         }

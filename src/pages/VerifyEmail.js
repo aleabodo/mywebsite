@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import jss from 'jss';
 import preset from 'jss-preset-default';
+import { Container, Segment, Message, Button } from 'semantic-ui-react'
 
 /*
 * Functions import
@@ -9,7 +10,6 @@ import preset from 'jss-preset-default';
 /*
 * Component imports
 */
-import Menu from '../components/Menu/Menu';
 
 jss.setup(preset());
 
@@ -28,7 +28,8 @@ Components -- END
 
 
 
-class Main extends Component {
+
+class VerifyEmail extends Component {
   constructor(props){
     super(props);
     //Initial loading screen
@@ -52,10 +53,24 @@ class Main extends Component {
   }
 
 
+  reload() {
+    window.location.reload();
+  }
+
+
   render() {
     return(
       <div>
-        <Menu />
+        <Container className={this.classes.container}>
+          <Segment padded="very">
+          <Message warning>
+            <Message.Header>Pease verify your email adress</Message.Header>
+            <p>Please check your emails and follow the instructions. Check your spam foulder if you didn't get it.</p>
+            <p>Reload this page after:</p>
+            <Button primary onClick={this.reload}>Reload</Button>
+          </Message>
+          </Segment>
+        </Container>
       </div>
     );
   }
@@ -63,9 +78,15 @@ class Main extends Component {
 
   getStyles() {
     return {
-      
+      container: {
+        padding: '0%',
+        '@media (min-width: 500px)': {
+          padding: '20%',
+          paddingTop: '10%',
+        }
+      }
     }
   }
 }
 
-export default Main;
+export default VerifyEmail;
