@@ -15,41 +15,35 @@
     .a {
       opacity: 1;
       font-size: 24px;
-      animation: fontFadeA 3s;
+      animation: fontFadeA 4s;
     }
 
     .b {
       opacity: 1;
       font-size: 24px;
-      animation: fontFadeB 3s;
+      animation: fontFadeB 3.5s;
     }
 
     @keyframes fontFadeA {
       0% {
-        font-size: 20px;
         opacity: 0;
       }
-      40% {
+      20% {
         opacity: 0;
-        font-size: 20px;
       }
       100% {
         opacity: 1;
-        font-size: 24px;
       }
     }
     @keyframes fontFadeB {
       0% {
         opacity: 0;
-        font-size: 20px;
       }
-      50% {
+      30% {
         opacity: 0;
-        font-size: 20px;
       }
       100% {
         opacity: 1;
-        font-size: 24px;
       }
     }
 

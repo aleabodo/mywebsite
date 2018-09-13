@@ -65,7 +65,7 @@ class VerifyEmail extends Component {
           <Segment padded="very">
           <Message warning>
             <Message.Header>Pease verify your email adress</Message.Header>
-            <p>Please check your emails and follow the instructions. Check your spam foulder if you didn't get it.</p>
+            <p>Please check your emails and follow the instructions. Check your spam folder if you didn't get it.</p>
             <p>Reload this page after:</p>
             <Button primary onClick={this.reload}>Reload</Button>
           </Message>
@@ -80,6 +80,7 @@ class VerifyEmail extends Component {
     return {
       container: {
         padding: '0%',
+        paddingTop: '15%',
         '@media (min-width: 500px)': {
           padding: '20%',
           paddingTop: '10%',

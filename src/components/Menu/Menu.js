@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { observer, inject } from 'mobx-react';
 import jss from 'jss';
 import preset from 'jss-preset-default';
-import { Menu, Button } from 'semantic-ui-react'
+import { Menu, Icon, Sidebar, Button } from 'semantic-ui-react';
 
 /*
 * Functions import
@@ -44,9 +44,12 @@ const Main = inject("rootStore") ( observer(
       this.stores = this.props.rootStore.stores;
 
       this.handleItemClick = this.handleItemClick.bind(this);
+      this.handleButtonClick = this.handleButtonClick.bind(this);
+      this.handleSidebarHide = this.handleSidebarHide.bind(this);
 
       this.state = {
-        activeItem: 'Home'
+        activeItem: 'Home',
+        visible: false
       }
 
       //Styles
@@ -65,7 +68,20 @@ const Main = inject("rootStore") ( observer(
 
     handleItemClick(e, { name }) {
       this.setState({ 
-        activeItem: name
+        activeItem: name,
+        visible: false
+      });
+    }
+
+    handleButtonClick() {
+      this.setState({
+        visible: true
+      });
+    }
+
+    handleSidebarHide() {
+      this.setState({
+        visible: false
       });
     }
 
@@ -73,37 +89,80 @@ const Main = inject("rootStore") ( observer(
     render() {
       const activeItem = this.state.activeItem
 
-      return(
-        <Menu stackable fixed="top">
-          <Menu.Item header>
-            <img alt="" src={require('../../files/images/logo.svg')} style={{display: 'block', width: '60px', height: '45px'}} />
-          </Menu.Item>
+      if(window.innerWidth > 700) {
 
-          <Menu.Item
-            name='Home'
-            active={activeItem === 'Home'}
-            onClick={this.handleItemClick}
-          >
-            Home
-          </Menu.Item>
+        //Desktop menu
 
-          <Menu.Item name='A' active={activeItem === 'A'} onClick={this.handleItemClick}>
-            Password manager
-          </Menu.Item>
+        return(
+          <div>
+            <Menu stackable fixed="top">
+              <Menu.Item header>
+                <img alt="" src={require('../../files/images/logo.svg')} style={{display: 'block', width: '60px', height: '45px'}} />
+              </Menu.Item>
+    
+              <Menu.Item name='Home' active={activeItem === 'Home'} onClick={this.handleItemClick} as='a'>
+                Home
+              </Menu.Item>
+    
+              <Menu.Item name='Password manager' active={activeItem === 'Password manager'} onClick={this.handleItemClick} as='a'>
+                Password manager
+              </Menu.Item>
+    
+              <Menu.Menu position='right'>
+                <Menu.Item>
+                  <Button primary onClick={this.stores.authStore.signOut}>Sign out</Button>
+                </Menu.Item>
+              </Menu.Menu>
+            </Menu>
+            {this.props.children}
+          </div>
+        );
+      } else {
 
-          <Menu.Menu position='right'>
-            <Menu.Item>
-              <Button primary onClick={this.stores.authStore.signOut}>Sign out</Button>
-            </Menu.Item>
-          </Menu.Menu>
-        </Menu>
-      );
+        //Mobile sidebar
+
+        return(
+          <div>
+            <Sidebar.Pushable>
+              <Sidebar
+                as={Menu}
+                animation='overlay'
+                onHide={this.handleSidebarHide}
+                visible={this.state.visible}
+                vertical
+                width='thin'
+              >
+                <Menu.Item header>
+                  <img alt="" src={require('../../files/images/logo.svg')} style={{display: 'block', width: '60px', height: '45px'}} />
+                </Menu.Item>
+
+                <Menu.Item name="Home" active={activeItem === 'Home'} onClick={this.handleItemClick} as='a'>
+                  Home
+                </Menu.Item>
+
+                <Menu.Item name="Password manager" active={activeItem === 'Password manager'} onClick={this.handleItemClick} as='a'>
+                  Password manager
+                </Menu.Item>
+              </Sidebar>
+
+              <Sidebar.Pusher dimmed={this.state.visible}>
+                <Icon className={this.classes.burgerButton} link color="red" size="huge" name="bars" onClick={this.handleButtonClick} />
+                {this.props.children}
+              </Sidebar.Pusher>
+            </Sidebar.Pushable>
+          </div>
+        )
+      }
+      
     }
 
 
     getStyles() {
       return {
-        
+        burgerButton: {
+          position: 'fixed',
+          zIndex: 1
+        }
       }
     }
   }

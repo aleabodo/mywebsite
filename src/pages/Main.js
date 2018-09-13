@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import jss from 'jss';
 import preset from 'jss-preset-default';
+import { Segment, Container } from 'semantic-ui-react'
 
 /*
 * Functions import
@@ -55,7 +56,15 @@ class Main extends Component {
   render() {
     return(
       <div>
-        <Menu />
+        <Menu>
+          <div style={{minHeight: '100vh'}}>
+            <Container className={this.classes.mainContainer}>
+              <Segment>
+                awdawd
+              </Segment>
+            </Container>
+          </div>
+        </Menu>
       </div>
     );
   }
@@ -63,7 +72,9 @@ class Main extends Component {
 
   getStyles() {
     return {
-      
+      mainContainer: {
+        paddingTop: '80px'
+      }
     }
   }
 }
