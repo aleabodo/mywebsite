@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import jss from 'jss';
 import preset from 'jss-preset-default';
-import { Segment, Container } from 'semantic-ui-react'
+import { Segment, Container } from 'semantic-ui-react';
+import { Router, Route, Switch } from "react-router-dom";
+import history from '../stores/functions/history';
 
 /*
 * Functions import
@@ -11,6 +13,8 @@ import { Segment, Container } from 'semantic-ui-react'
 * Component imports
 */
 import Menu from '../components/Menu/Menu';
+import Home from './home/Home';
+import PasswordManager from './passwordManager/PasswordManager';
 
 jss.setup(preset());
 
@@ -39,6 +43,12 @@ class Main extends Component {
     *   - /
     */
 
+    this.handleItemClick = this.handleItemClick.bind(this);
+
+    this.state = {
+      activeItem: ''
+    }
+
     //Styles
     this.styles = this.getStyles();
     this.sheet = jss.createStyleSheet(this.styles);
@@ -53,19 +63,25 @@ class Main extends Component {
   }
 
 
+  handleItemClick(name) {
+    history.push(name);
+  }
+
+
   render() {
     return(
-      <div>
-        <Menu>
-          <div style={{minHeight: '100vh'}}>
-            <Container className={this.classes.mainContainer}>
-              <Segment>
-                awdawd
-              </Segment>
-            </Container>
-          </div>
+      <Router history={history}>
+        <Menu handleItemClick={this.handleItemClick}>
+          <Container className={this.classes.mainContainer}>
+            <Segment>
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route path="/passwords" component={PasswordManager} />
+              </Switch>
+            </Segment>
+          </Container>
         </Menu>
-      </div>
+      </Router>
     );
   }
 

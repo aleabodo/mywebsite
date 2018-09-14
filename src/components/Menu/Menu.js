@@ -48,7 +48,6 @@ const Main = inject("rootStore") ( observer(
       this.handleSidebarHide = this.handleSidebarHide.bind(this);
 
       this.state = {
-        activeItem: 'Home',
         visible: false
       }
 
@@ -65,10 +64,10 @@ const Main = inject("rootStore") ( observer(
       this.sheet.detach()
     }
 
-
     handleItemClick(e, { name }) {
-      this.setState({ 
-        activeItem: name,
+      this.props.handleItemClick(name);
+
+      this.setState({
         visible: false
       });
     }
@@ -87,7 +86,7 @@ const Main = inject("rootStore") ( observer(
 
 
     render() {
-      const activeItem = this.state.activeItem
+      const activeItem = window.location.pathname;
 
       if(window.innerWidth > 700) {
 
@@ -99,12 +98,12 @@ const Main = inject("rootStore") ( observer(
               <Menu.Item header>
                 <img alt="" src={require('../../files/images/logo.svg')} style={{display: 'block', width: '60px', height: '45px'}} />
               </Menu.Item>
-    
-              <Menu.Item name='Home' active={activeItem === 'Home'} onClick={this.handleItemClick} as='a'>
+  
+              <Menu.Item name='/' active={activeItem === '/'} onClick={this.handleItemClick} as='a'>
                 Home
               </Menu.Item>
-    
-              <Menu.Item name='Password manager' active={activeItem === 'Password manager'} onClick={this.handleItemClick} as='a'>
+  
+              <Menu.Item name='/passwords' active={activeItem === '/passwords'} onClick={this.handleItemClick} as='a'>
                 Password manager
               </Menu.Item>
     
@@ -114,7 +113,9 @@ const Main = inject("rootStore") ( observer(
                 </Menu.Item>
               </Menu.Menu>
             </Menu>
-            {this.props.children}
+            <div style={{minHeight: '100vh'}}>
+              {this.props.children}
+            </div>
           </div>
         );
       } else {
