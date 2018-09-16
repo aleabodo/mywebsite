@@ -37,7 +37,7 @@ const Main = inject("rootStore") ( observer(
 
       /*
       * Expected props
-      *   - /
+      *   - handleItemClick(): function, void
       */
 
       //Stored information

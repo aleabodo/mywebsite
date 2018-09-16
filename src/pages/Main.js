@@ -36,7 +36,7 @@ Components -- END
 class Main extends Component {
   constructor(props){
     super(props);
-    //Initial loading screen
+    //Main page
 
     /*
     * Expected props
@@ -73,7 +73,7 @@ class Main extends Component {
       <Router history={history}>
         <Menu handleItemClick={this.handleItemClick}>
           <Container className={this.classes.mainContainer}>
-            <Segment>
+            <Segment className={this.classes.mainSegment}>
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/passwords" component={PasswordManager} />
@@ -90,6 +90,10 @@ class Main extends Component {
     return {
       mainContainer: {
         paddingTop: '80px'
+      },
+
+      mainSegment: {
+        position: 'static !important'
       }
     }
   }
