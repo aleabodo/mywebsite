@@ -113,9 +113,7 @@ const Main = inject("rootStore") ( observer(
                 </Menu.Item>
               </Menu.Menu>
             </Menu>
-            <div style={{minHeight: '100vh'}}>
-              {this.props.children}
-            </div>
+            {this.props.children}
           </div>
         );
       } else {
@@ -123,35 +121,33 @@ const Main = inject("rootStore") ( observer(
         //Mobile sidebar
 
         return(
-          <div>
-            <Sidebar.Pushable>
-              <Sidebar
-                as={Menu}
-                animation='overlay'
-                onHide={this.handleSidebarHide}
-                visible={this.state.visible}
-                vertical
-                width='thin'
-              >
-                <Menu.Item header>
-                  <img alt="" src={require('../../files/images/logo.svg')} style={{display: 'block', width: '60px', height: '45px'}} />
-                </Menu.Item>
+          <Sidebar.Pushable>
+            <Sidebar
+              as={Menu}
+              animation='overlay'
+              onHide={this.handleSidebarHide}
+              visible={this.state.visible}
+              vertical
+              width='thin'
+            >
+              <Menu.Item header>
+                <img alt="" src={require('../../files/images/logo.svg')} style={{display: 'block', width: '60px', height: '45px'}} />
+              </Menu.Item>
 
-                <Menu.Item name="Home" active={activeItem === 'Home'} onClick={this.handleItemClick} as='a'>
-                  Home
-                </Menu.Item>
+              <Menu.Item name="/" active={activeItem === '/'} onClick={this.handleItemClick} as='a'>
+                Home
+              </Menu.Item>
 
-                <Menu.Item name="Password manager" active={activeItem === 'Password manager'} onClick={this.handleItemClick} as='a'>
-                  Password manager
-                </Menu.Item>
-              </Sidebar>
+              <Menu.Item name="/passwords" active={activeItem === '/passwords'} onClick={this.handleItemClick} as='a'>
+                Password manager
+              </Menu.Item>
+            </Sidebar>
 
-              <Sidebar.Pusher dimmed={this.state.visible}>
-                <Icon className={this.classes.burgerButton} link color="red" size="huge" name="bars" onClick={this.handleButtonClick} />
-                {this.props.children}
-              </Sidebar.Pusher>
-            </Sidebar.Pushable>
-          </div>
+            <Sidebar.Pusher dimmed={this.state.visible}>
+              <Icon className={this.classes.burgerButton} link color="red" size="huge" name="bars" onClick={this.handleButtonClick} />
+              {this.props.children}
+            </Sidebar.Pusher>
+          </Sidebar.Pushable>
         )
       }
       

@@ -1,17 +1,25 @@
 import React, {Component} from 'react';
+import { observer, inject } from 'mobx-react';
 import jss from 'jss';
 import preset from 'jss-preset-default';
 import { Segment, Container, Header, Form, Input, Button, Icon } from 'semantic-ui-react';
+import alertify from 'alertify.js';
 
 /*
 * Functions import
 */
+import { encrypt } from '../../stores/functions/encryption';
 
 /*
 * Component imports
 */
 
 jss.setup(preset());
+
+//Firebase
+var firebase = require('../../stores/fb').fb;
+// Initialize Cloud Firestore through Firebase
+var db = firebase.firestore();
 
 
 /*
@@ -28,54 +36,61 @@ Components -- END
 
 
 
-class New extends Component {
-  constructor(props){
-    super(props);
-    //Add a new password window
+const New = inject("rootStore") ( observer(
+  class New extends Component {
+    constructor(props){
+      super(props);
+      //Add a new password window
 
-    /*
-    * Expected props
-    *   - open: bool
-    *       display component or not
-    *   - toggleNewWindow: function
-    *       toggles window: open and close
-    *   - encryptionkey: String
-    *       encryption key of the password
-    */
+      /*
+      * Expected props
+      *   - open: bool
+      *       display component or not
+      *   - toggleNewWindow: function
+      *       toggles window: open and close
+      *   - encryptionkey: String
+      *       encryption key of the password
+      */
 
-    this.state = {
-      url: '',
-      login: '',
-      password: this.generatePassword(),
-      loading: false
-    }
+      //Stored information
+      this.stores = this.props.rootStore.stores;
 
-    //Styles
-    this.styles = this.getStyles();
-    this.sheet = jss.createStyleSheet(this.styles);
-    const {classes} = this.sheet.attach();
-    this.classes = classes;
-    //Styles
-  }
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
 
-
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.open !== this.props.open) {
-      this.setState({
+      this.state = {
         url: '',
         login: '',
-        password: this.generatePassword()
-      });
+        password: this.generatePassword(),
+        loading: false
+      }
+
+      //Styles
+      this.styles = this.getStyles();
+      this.sheet = jss.createStyleSheet(this.styles);
+      const {classes} = this.sheet.attach();
+      this.classes = classes;
+      //Styles
     }
-  }
+    
+
+    componentWillReceiveProps(nextProps) {
+      if(nextProps.open !== this.props.open) {
+        this.setState({
+          url: '',
+          login: '',
+          password: this.generatePassword()
+        });
+      }
+    }
 
 
-  componentWillUnmount() {
-    this.sheet.detach()
-  }
+    componentWillUnmount() {
+      this.sheet.detach()
+    }
 
 
-  generatePassword() {
+    generatePassword() {
       //Creates a unique id for each chat bubble so that the animation can be triggered
     
       var random = "";
@@ -89,78 +104,111 @@ class New extends Component {
           return random;
         }
       }
-  }
-
-
-  handleChange(e, {name}) {
-    this.setState({
-      [name]: e.target.value
-    });
-  }
-
-
-  render() {
-    if(this.props.open) {
-      return(
-        <div className={this.classes.box}>
-          <Container text>
-            <Segment padded="very">
-              <Form onSubmit={this.handleSubmit}>
-                <Header as="h2">
-                  Add a password
-                </Header>
-
-                <Form.Field>
-                  <label>Application / URL:</label>
-                  <Input iconPosition='left' placeholder='http://exmple.com'>
-                    <input value={this.state.url} type="text" name="url" onChange={this.handleChange} autoComplete="off" required />
-                  </Input>
-                </Form.Field>
-
-                <Form.Field>
-                  <label>Username / email adress:</label>
-                  <Input iconPosition='left' placeholder='example@example.com'>
-                    <input value={this.state.login} type="text" name="login" onChange={this.handleChange} autoComplete="off" required />
-                  </Input>
-                </Form.Field>
-
-                <Form.Field>
-                  <label>Password:</label>
-                  <Input iconPosition='left' placeholder='********'>
-                    <input value={this.state.password} type="text" name="password" onChange={this.handleChange} autoComplete="off" required />
-                  </Input>
-                </Form.Field>
-
-                <p>The encryption key for this entry is '<b>{this.props.encryptionkey}</b>'</p>
-
-                <Button loading={this.state.loading} type='submit' primary>Add</Button>
-                <Button loading={this.state.loading} onClick={this.props.toggleNewWindow}><Icon name="x" />Cancel</Button>
-                
-              </Form>
-            </Segment>
-          </Container>
-        </div>
-      );
-    } else {
-      return null;
     }
-  }
 
 
-  getStyles() {
-    return {
-      box: {
-        width: '100vw',
-        height: '100vh',
-        position: 'fixed',
-        zIndex: 1000,
-        top: 0,
-        left: 0,
-        backgroundColor: 'rgba(255,255,255,0.9)',
-        paddingTop: '5%'
+    handleChange(e) {
+      this.setState({
+        [e.target.name]: e.target.value
+      });
+    }
+
+
+    handleSubmit() {
+      const url = this.state.url;
+      const login = encrypt(this.state.login, this.props.encryptionkey);
+      const password = encrypt(this.state.password, this.props.encryptionkey);
+      const uid = this.stores.authStore.userData.uid;
+
+      db.collection("passwords").add({
+        uid: uid,
+        url: url,
+        login: login,
+        password: password,
+        time: new Date()
+      })
+      .then((docRef) => {
+        console.log("Document written with ID: ", docRef.id);
+        alertify.success("Document successfully added!");
+        this.props.toggleNewWindow();
+      })
+      .catch(function(error) {
+        console.error("Error adding document: ", error);
+        alertify.error("Something went wrong! Please check your internet connection");
+        this.setState({
+          loading: false
+        });
+      });
+
+      this.setState({
+        loading: true
+      });
+    }
+
+
+    render() {
+      if(this.props.open) {
+        return(
+          <div className={this.classes.box}>
+            <Container text>
+              <Segment padded="very">
+                <Form onSubmit={this.handleSubmit}>
+                  <Header as="h2">
+                    Add a password
+                  </Header>
+
+                  <Form.Field>
+                    <label>Application / URL:</label>
+                    <Input iconPosition='left' placeholder='http://exmple.com'>
+                      <input value={this.state.url} type="text" name="url" onChange={this.handleChange} autoComplete="off" required />
+                    </Input>
+                  </Form.Field>
+
+                  <Form.Field>
+                    <label>Username / email adress:</label>
+                    <Input iconPosition='left' placeholder='example@example.com'>
+                      <input value={this.state.login} type="text" name="login" onChange={this.handleChange} autoComplete="off" required />
+                    </Input>
+                  </Form.Field>
+
+                  <Form.Field>
+                    <label>Password:</label>
+                    <Input iconPosition='left' placeholder='********'>
+                      <input value={this.state.password} type="text" name="password" onChange={this.handleChange} autoComplete="off" required />
+                    </Input>
+                  </Form.Field>
+
+                  <p>The encryption key for this entry is '<b>{this.props.encryptionkey}</b>'</p>
+
+                  <Button loading={this.state.loading} type='submit' primary>Add</Button>
+                  <Button loading={this.state.loading} onClick={this.props.toggleNewWindow}><Icon name="x" />Cancel</Button>
+                  
+                </Form>
+              </Segment>
+            </Container>
+          </div>
+        );
+      } else {
+        return null;
+      }
+    }
+
+
+    getStyles() {
+      return {
+        box: {
+          width: '100vw',
+          height: '100vh',
+          position: 'fixed',
+          zIndex: 1000,
+          top: 0,
+          left: 0,
+          backgroundColor: 'rgba(255,255,255,0.9)',
+          paddingTop: '5%'
+        }
       }
     }
   }
-}
+));
 
 export default New;

@@ -42,7 +42,7 @@ const App = inject("rootStore") ( observer(
       const body = document.getElementsByTagName('body')[0];
       body.style.margin = '0';
       body.style.padding = '0';
-      body.style.overflow = 'hidden';
+      body.style.overflow = 'auto';
 
       //Load app
       this.stores.rootStore.loadApp();

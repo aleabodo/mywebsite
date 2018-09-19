@@ -78,6 +78,7 @@ class Main extends Component {
                 <Route exact path="/" component={Home} />
                 <Route path="/passwords" component={PasswordManager} />
               </Switch>
+              <img alt="" style={{width: '100px', marginBottom: '-20px', marginTop: '30px', marginLeft: '20px'}} src={require('../files/images/ninja.svg')} />
             </Segment>
           </Container>
         </Menu>

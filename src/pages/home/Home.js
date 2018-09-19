@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import jss from 'jss';
 import preset from 'jss-preset-default';
+import { Container } from 'semantic-ui-react';
 
 /*
 * Functions import
@@ -9,6 +10,7 @@ import preset from 'jss-preset-default';
 /*
 * Component imports
 */
+import Headline from '../../components/Headline';
 
 jss.setup(preset());
 
@@ -53,9 +55,16 @@ class Home extends Component {
 
   render() {
     return(
-      <div>
-        Home
-      </div>
+      <Container text>
+        <Headline black="alexbell." red="ninja" />
+
+        <p>
+          You are signed in on alexbell.ninja. <b>What can you do here?</b><br />
+          Well, I like developing software in my freetime, mainly applications
+          for my personal use. They might also be of advantage for you, so feel free
+          to browse around a little and try some of what you can find here :)
+        </p>
+      </Container>
     );
   }
 
