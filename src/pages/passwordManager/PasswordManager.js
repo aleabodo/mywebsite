@@ -54,6 +54,7 @@ const PasswordManager = inject("rootStore") ( observer(
 
       this.toggleNewWindow = this.toggleNewWindow.bind(this);
       this.onChangeInput = this.onChangeInput.bind(this);
+      this.addDoc = this.addDoc.bind(this);
 
       this.state = {
         newWindowOpen: false,
@@ -79,6 +80,18 @@ const PasswordManager = inject("rootStore") ( observer(
 
     componentWillUnmount() {
       this.sheet.detach()
+    }
+
+
+    addDoc(data) {
+      //Add a new doc locally so no new data transfer from firestore
+      //is needed
+      var newArr = [];
+      newArr[0] = data;
+      newArr = newArr.concat(this.state.data);
+      this.setState({
+        data: newArr
+      });
     }
 
 
@@ -111,11 +124,11 @@ const PasswordManager = inject("rootStore") ( observer(
 
       const uid = this.stores.authStore.userData.uid;
 
-      db.collection("passwords").where("uid", "==", uid).orderBy("time", "desc").get().then((querySnapshot) => {
+      db.collection("passwords/"+uid+"/passwords").where("uid", "==", uid).orderBy("time", "desc").get().then((querySnapshot) => {
         var arr = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-           arr.push(data);
+          arr.push(data);
         });
         this.setState({
           data: arr,
@@ -128,25 +141,62 @@ const PasswordManager = inject("rootStore") ( observer(
     displayData(dataList) {
       //Returns array with all table row components
       var components = [];
+
+      function copyToClipboard(string) {
+        var textArea = document.createElement("textarea");
+        textArea.style.position = 'fixed';
+        textArea.style.top = 0;
+        textArea.style.left = 0;
+        textArea.style.width = '2em';
+        textArea.style.height = '2em';
+        textArea.style.padding = 0;
+        textArea.style.border = 'none';
+        textArea.style.outline = 'none';
+        textArea.style.boxShadow = 'none';
+        textArea.style.background = 'transparent';
+        textArea.value = string;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+          var successful = document.execCommand('copy');
+          if(successful) {
+            alertify.success("Copied to clipboard!");
+          } else {
+            alertify.error("Unable to copy to clipboard");
+          }
+        } catch (err) {
+          alertify.error("Unable to copy to clipboard");
+        }
+        document.body.removeChild(textArea);
+      }
       
       dataList.forEach((element, index) => {
-        components.push(
-          <Table.Row key={index}>
-            <Table.Cell>{element.url}</Table.Cell>
-            <Table.Cell>{decrypt(element.login, this.state.key)}</Table.Cell>
-            <Table.Cell>
-              <Button icon>
-                <Icon name='copy' />
-              </Button>
-            </Table.Cell>
-            <Table.Cell>{decrypt(element.password, this.state.key)}</Table.Cell>
-            <Table.Cell>
-              <Button icon>
-                <Icon name='copy' />
-              </Button>
-            </Table.Cell>
-          </Table.Row>
-        );
+        if(element.url.includes(this.state.search)) {
+          const copyLogin = () => {
+            copyToClipboard(decrypt(element.login, this.state.key));
+          } 
+          const copyPassword = () => {
+            copyToClipboard(decrypt(element.password, this.state.key));
+          }
+          components.push(
+            <Table.Row key={index}>
+              <Table.Cell>{element.url}</Table.Cell>
+              <Table.Cell>{decrypt(element.login, this.state.key)}</Table.Cell>
+              <Table.Cell>
+                <Button icon>
+                  <Icon onClick={copyLogin} name='copy' />
+                </Button>
+              </Table.Cell>
+              <Table.Cell>{decrypt(element.password, this.state.key)}</Table.Cell>
+              <Table.Cell>
+                <Button icon>
+                  <Icon onClick={copyPassword} name='copy' />
+                </Button>
+              </Table.Cell>
+            </Table.Row>
+          );
+        }
       });
 
       return components;
@@ -158,7 +208,7 @@ const PasswordManager = inject("rootStore") ( observer(
 
       return(
         <div>
-          <New encryptionkey={this.state.key} open={this.state.newWindowOpen} toggleNewWindow={this.toggleNewWindow} />
+          <New addDoc={this.addDoc} encryptionkey={this.state.key} open={this.state.newWindowOpen} toggleNewWindow={this.toggleNewWindow} />
 
           <Headline black="Password " red="manager" />
 
@@ -179,7 +229,7 @@ const PasswordManager = inject("rootStore") ( observer(
             <Menu.Menu position='right'>
               <div className='ui right aligned category search item'>
                 <div className='ui transparent icon input'>
-                  <input className='prompt' type='text' placeholder='Encryption key...' name="key" onChange={this.onChangeInput} autoComplete="off" />
+                  <input className='prompt' type='password' placeholder='Encryption key...' name="key" onChange={this.onChangeInput} autoComplete="off" />
                   <i className='key icon' />
                 </div>
               </div>
@@ -193,9 +243,9 @@ const PasswordManager = inject("rootStore") ( observer(
                 <Table.Row>
                   <Table.HeaderCell width={4}>Application / URL</Table.HeaderCell>
                   <Table.HeaderCell width={5}>Username / Email adress</Table.HeaderCell>
-                  <Table.HeaderCell width={1}>Copy</Table.HeaderCell>
+                  <Table.HeaderCell width={1}></Table.HeaderCell>
                   <Table.HeaderCell width={5}>Password</Table.HeaderCell>
-                  <Table.HeaderCell width={1}>Copy</Table.HeaderCell>
+                  <Table.HeaderCell width={1}></Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
 

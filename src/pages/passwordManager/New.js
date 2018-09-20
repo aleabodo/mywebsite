@@ -120,17 +120,26 @@ const New = inject("rootStore") ( observer(
       const password = encrypt(this.state.password, this.props.encryptionkey);
       const uid = this.stores.authStore.userData.uid;
 
-      db.collection("passwords").add({
+      const data = {
         uid: uid,
         url: url,
         login: login,
         password: password,
         time: new Date()
-      })
+      }
+
+      //Add a new doc locally so no new data transfer from firestore
+      //is needed
+      this.props.addDoc(data);
+
+      db.collection("passwords/"+uid+"/passwords").add(data)
       .then((docRef) => {
         console.log("Document written with ID: ", docRef.id);
         alertify.success("Document successfully added!");
         this.props.toggleNewWindow();
+        this.setState({
+          loading: false
+        });
       })
       .catch(function(error) {
         console.error("Error adding document: ", error);
