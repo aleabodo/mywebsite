@@ -12,6 +12,7 @@ import { Container, Button, Form, Header, Segment, Input, Icon } from 'semantic-
 * Component imports
 */
 import LoadingPage from '../components/loadingPage';
+import Headline from '../components/Headline';
 
 jss.setup(preset());
 
@@ -126,6 +127,29 @@ const Login = inject("rootStore") ( observer(
                 <Button loading={this.state.loading} type='submit'>Go!</Button>
               </Form>
             </Segment>
+
+            <Segment padded="very">
+              <Headline black="Password " red="manager" />
+              <ul>
+                <li>
+                  Keep your passwords <b>organized</b> and access them
+                  from <b>every device</b>
+                </li>
+                <li>
+                  Sophisticated database access permissions and <b>client side encryption and decryption</b> make your password list readable only to you, even in the unlikely event that the software gets hacked!
+                </li>
+                <li>
+                  <b>Search</b> in your password list
+                </li>
+                <li>
+                  Automatic <b>password generator</b>
+                </li>
+                <li>
+                  <b>Copy</b> the password by just one button click
+                </li>
+              </ul>
+              <img alt="" className={this.classes.ninja} src={require('../files/images/ninja.svg')} />
+            </Segment>
           </Container>
         </div>
       );
@@ -141,6 +165,13 @@ const Login = inject("rootStore") ( observer(
             padding: '20%',
             paddingTop: '10%',
           }
+        },
+
+        ninja: {
+          width: '100px',
+          marginBottom: '-47px',
+          marginTop: '30px',
+          marginLeft: '20px'
         }
       }
     }

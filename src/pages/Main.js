@@ -73,12 +73,12 @@ class Main extends Component {
       <Router history={history}>
         <Menu handleItemClick={this.handleItemClick}>
           <Container className={this.classes.mainContainer}>
-            <Segment className={this.classes.mainSegment}>
+            <Segment className={this.classes.mainSegment} padded="very">
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/passwords" component={PasswordManager} />
               </Switch>
-              <img alt="" style={{width: '100px', marginBottom: '-20px', marginTop: '30px', marginLeft: '20px'}} src={require('../files/images/ninja.svg')} />
+              <img alt="" className={this.classes.ninja} src={require('../files/images/ninja.svg')} />
             </Segment>
           </Container>
         </Menu>
@@ -95,6 +95,13 @@ class Main extends Component {
 
       mainSegment: {
         position: 'static !important'
+      },
+
+      ninja: {
+        width: '100px',
+        marginBottom: '-47px',
+        marginTop: '30px',
+        marginLeft: '20px'
       }
     }
   }

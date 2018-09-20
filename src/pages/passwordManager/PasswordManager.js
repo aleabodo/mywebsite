@@ -4,6 +4,7 @@ import jss from 'jss';
 import preset from 'jss-preset-default';
 import { Menu, Segment, Dropdown, Table, Button, Loader, Icon, Header, Input } from 'semantic-ui-react';
 import alertify from 'alertify.js';
+import ReactHtmlParser from 'react-html-parser';
 
 /*
 * Functions import
@@ -143,6 +144,8 @@ const PasswordManager = inject("rootStore") ( observer(
       var components = [];
 
       function copyToClipboard(string) {
+        //Copy string to clipboard
+
         var textArea = document.createElement("textarea");
         textArea.style.position = 'fixed';
         textArea.style.top = 0;
@@ -170,6 +173,15 @@ const PasswordManager = inject("rootStore") ( observer(
         }
         document.body.removeChild(textArea);
       }
+
+      function transformUrl(text) {
+        //Transforms url into clickable link
+
+        var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
+        var text1 = text.replace(exp, '<a target="_blank" href="$1">$1</a>');
+        var exp2 = /(^|[^/])(www\.[\S]+(\b|$))/gim;
+        return ReactHtmlParser(text1.replace(exp2, '$1<a target="_blank" href="http://$2">$2</a>'));
+      }
       
       dataList.forEach((element, index) => {
         if(element.url.includes(this.state.search)) {
@@ -179,16 +191,21 @@ const PasswordManager = inject("rootStore") ( observer(
           const copyPassword = () => {
             copyToClipboard(decrypt(element.password, this.state.key));
           }
+        
+          const url = transformUrl(element.url);
+          const password = decrypt(element.password, this.state.key);
+          const login = decrypt(element.login, this.state.key);
+
           components.push(
             <Table.Row key={index}>
-              <Table.Cell>{element.url}</Table.Cell>
-              <Table.Cell>{decrypt(element.login, this.state.key)}</Table.Cell>
+              <Table.Cell>{url}</Table.Cell>
+              <Table.Cell>{login}</Table.Cell>
               <Table.Cell>
                 <Button icon>
                   <Icon onClick={copyLogin} name='copy' />
                 </Button>
               </Table.Cell>
-              <Table.Cell>{decrypt(element.password, this.state.key)}</Table.Cell>
+              <Table.Cell>{password}</Table.Cell>
               <Table.Cell>
                 <Button icon>
                   <Icon onClick={copyPassword} name='copy' />

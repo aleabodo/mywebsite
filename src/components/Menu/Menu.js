@@ -141,6 +141,12 @@ const Main = inject("rootStore") ( observer(
               <Menu.Item name="/passwords" active={activeItem === '/passwords'} onClick={this.handleItemClick} as='a'>
                 Password manager
               </Menu.Item>
+
+              <Menu.Menu>
+                <Menu.Item>
+                  <Button primary onClick={this.stores.authStore.signOut}>Sign out</Button>
+                </Menu.Item>
+              </Menu.Menu>
             </Sidebar>
 
             <Sidebar.Pusher dimmed={this.state.visible}>

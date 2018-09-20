@@ -187,7 +187,7 @@ const New = inject("rootStore") ( observer(
                     </Input>
                   </Form.Field>
 
-                  <p>The encryption key for this entry is '<b>{this.props.encryptionkey}</b>'</p>
+                  <p>Login and password are going to be encrypted with the key you have set.</p>
 
                   <Button loading={this.state.loading} type='submit' primary>Add</Button>
                   <Button loading={this.state.loading} onClick={this.props.toggleNewWindow}><Icon name="x" />Cancel</Button>
