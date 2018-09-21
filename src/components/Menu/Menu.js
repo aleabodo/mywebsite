@@ -103,7 +103,7 @@ const Main = inject("rootStore") ( observer(
                 Home
               </Menu.Item>
   
-              <Menu.Item name='/passwords' active={activeItem === '/passwords'} onClick={this.handleItemClick} as='a'>
+              <Menu.Item name='/p' active={activeItem === '/p'} onClick={this.handleItemClick} as='a'>
                 Password manager
               </Menu.Item>
     
@@ -138,7 +138,7 @@ const Main = inject("rootStore") ( observer(
                 Home
               </Menu.Item>
 
-              <Menu.Item name="/passwords" active={activeItem === '/passwords'} onClick={this.handleItemClick} as='a'>
+              <Menu.Item name="/p" active={activeItem === '/p'} onClick={this.handleItemClick} as='a'>
                 Password manager
               </Menu.Item>
 

@@ -76,7 +76,7 @@ class Main extends Component {
             <Segment className={this.classes.mainSegment} padded="very">
               <Switch>
                 <Route exact path="/" component={Home} />
-                <Route path="/passwords" component={PasswordManager} />
+                <Route path="/p" component={PasswordManager} />
               </Switch>
               <img alt="" className={this.classes.ninja} src={require('../files/images/ninja.svg')} />
             </Segment>

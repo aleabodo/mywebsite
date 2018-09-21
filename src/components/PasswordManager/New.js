@@ -76,11 +76,19 @@ const New = inject("rootStore") ( observer(
 
     componentWillReceiveProps(nextProps) {
       if(nextProps.open !== this.props.open) {
+        //Empty input fields
         this.setState({
           url: '',
           login: '',
           password: this.generatePassword()
         });
+      }
+    }
+
+
+    componentDidUpdate() {
+      if(this.props.open && this.state.url === '' && this.state.login === '') {
+        document.getElementById('url').focus();
       }
     }
 
@@ -169,7 +177,7 @@ const New = inject("rootStore") ( observer(
                   <Form.Field>
                     <label>Application / URL:</label>
                     <Input iconPosition='left' placeholder='http://exmple.com'>
-                      <input value={this.state.url} type="text" name="url" onChange={this.handleChange} autoComplete="off" required />
+                      <input value={this.state.url} type="text" name="url" id="url" onChange={this.handleChange} autoComplete="off" required />
                     </Input>
                   </Form.Field>
 

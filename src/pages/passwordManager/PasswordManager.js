@@ -76,6 +76,9 @@ const PasswordManager = inject("rootStore") ( observer(
 
     componentDidMount() {
       this.fetchData();
+
+      //Focus on search input
+      document.getElementById('search').focus();
     }
 
 
@@ -230,7 +233,7 @@ const PasswordManager = inject("rootStore") ( observer(
           <Headline black="Password " red="manager" />
 
           <Input icon placeholder='Search...'>
-            <input type='text' placeholder='Search...' name="search" onChange={this.onChangeInput} autoComplete="off" />
+            <input type='text' id="search" placeholder='Search...' name="search" onChange={this.onChangeInput} autoComplete="off" />
             <Icon name='search' />
           </Input>
 
