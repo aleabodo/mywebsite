@@ -147,6 +147,11 @@ const Login = inject("rootStore") ( observer(
                 <li>
                   <b>Copy</b> the password by just one button click
                 </li>
+                <br />
+                <li>
+                  <b>For nerds: </b><a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" target="_blank" rel="noopener noreferrer">AES (Rijndael cipher) </a>
+                  encrypted with a 128 bits key, 10 rounds and a blocksize of 128 bits. Established by the U.S. NIST in 2001 and approved by the NSA for "top secret" information.
+                </li>
               </ul>
               <img alt="" className={this.classes.ninja} src={require('../files/images/ninja.svg')} />
             </Segment>

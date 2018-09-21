@@ -14,7 +14,7 @@ import { decrypt } from '../../stores/functions/encryption';
 /*
 * Component imports
 */
-import New from './New';
+import New from '../../components/PasswordManager/New';
 import Headline from '../../components/Headline';
 
 jss.setup(preset());
@@ -288,6 +288,11 @@ const PasswordManager = inject("rootStore") ( observer(
           <hr />
           <p>
             <b>I advise you to choose one encryption key and use it for all your passwords in your list.</b> Why? Using the same key makes decrypting easier for you because <b>all</b> entries are being decrypted correctly at the same time by using one single key.
+          </p>
+          <hr />
+          <p>
+            <b>For nerds: </b><a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" target="_blank" rel="noopener noreferrer">AES (Rijndael cipher) </a>
+            encrypted with a 128 bits key, 10 rounds and a blocksize of 128 bits. Established by the U.S. NIST in 2001 and approved by the NSA for "top secret" information.
           </p>
         </div>
       );

@@ -1,13 +1,24 @@
-function norm_to_ascii(string){return unescape(encodeURIComponent(string))};
-function norm_to_unicode(string){return decodeURIComponent(escape(string))};
-function crypt_sym(string,k){return String.fromCharCode.apply(undefined,string.split("").map(function(c){return c.charCodeAt(0)^(k||13)}))};
+import CryptoJS from 'crypto-js';
 
 export function encrypt(string, key) {
   //Encrypt a string
-  return btoa(crypt_sym(norm_to_ascii(string), key));
+  return CryptoJS.AES.encrypt(string, key).toString();
 }
 
-export function decrypt(string, key) {
+export function decrypt(ciphertext, key) {
   //Decrypt a string
-  return crypt_sym(norm_to_unicode(atob(string)), key);
+  var bytes  = CryptoJS.AES.decrypt(ciphertext, key);
+  var originalText;
+
+  try {
+    originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+    if(originalText === '') {
+      originalText = CryptoJS.HMACMD5(key + ciphertext).toString(CryptoJS.enc.Hex).substring(0, 15);
+    }
+  } catch(ex) {
+    originalText = CryptoJS.SHA256(key + ciphertext).toString(CryptoJS.enc.Hex).substring(0, 15);
+  }
+  
+  return originalText;
 }
