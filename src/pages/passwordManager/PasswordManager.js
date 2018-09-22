@@ -187,7 +187,7 @@ const PasswordManager = inject("rootStore") ( observer(
       }
       
       dataList.forEach((element, index) => {
-        if(element.url.includes(this.state.search)) {
+        if(element.url.toLowerCase().includes(this.state.search.toLowerCase())) {
           const copyLogin = () => {
             copyToClipboard(decrypt(element.login, this.state.key));
           } 
