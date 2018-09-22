@@ -1,0 +1,1 @@
+Decided to lay open the code of my website and of my login page of my website for transparency, for people who might be interested in the code or for people who might contribute to the login project :)
