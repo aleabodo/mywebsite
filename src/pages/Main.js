@@ -73,7 +73,7 @@ class Main extends Component {
       <Router history={history}>
         <Menu handleItemClick={this.handleItemClick}>
           <Container className={this.classes.mainContainer}>
-            <Segment className={this.classes.mainSegment} padded="very">
+            <Segment className={this.classes.mainSegment}>
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/p" component={PasswordManager} />
@@ -99,7 +99,7 @@ class Main extends Component {
 
       ninja: {
         width: '100px',
-        marginBottom: '-47px',
+        marginBottom: '-20px',
         marginTop: '30px',
         marginLeft: '20px'
       }

@@ -15,6 +15,7 @@ import { decrypt } from '../../stores/functions/encryption';
 * Component imports
 */
 import New from '../../components/PasswordManager/New';
+import Edit from '../../components/PasswordManager/Edit';
 import Headline from '../../components/Headline';
 
 jss.setup(preset());
@@ -54,11 +55,15 @@ const PasswordManager = inject("rootStore") ( observer(
       this.stores = this.props.rootStore.stores;
 
       this.toggleNewWindow = this.toggleNewWindow.bind(this);
+      this.toggleEditWindow = this.toggleEditWindow.bind(this);
       this.onChangeInput = this.onChangeInput.bind(this);
       this.addDoc = this.addDoc.bind(this);
+      this.updateDoc = this.updateDoc.bind(this);
 
       this.state = {
         newWindowOpen: false,
+        editWindowOpen: false,
+        editIndex: null,
         key: '',
         search: '',
         data: [],
@@ -76,9 +81,6 @@ const PasswordManager = inject("rootStore") ( observer(
 
     componentDidMount() {
       this.fetchData();
-
-      //Focus on search input
-      document.getElementById('search').focus();
     }
 
 
@@ -93,6 +95,16 @@ const PasswordManager = inject("rootStore") ( observer(
       var newArr = [];
       newArr[0] = data;
       newArr = newArr.concat(this.state.data);
+      this.setState({
+        data: newArr
+      });
+    }
+
+
+    updateDoc(data, editIndex) {
+      //Update a doc locally with the new values
+      var newArr = this.state.data;
+      newArr[editIndex] = data;
       this.setState({
         data: newArr
       });
@@ -122,17 +134,32 @@ const PasswordManager = inject("rootStore") ( observer(
     }
 
 
+    toggleEditWindow(index) {
+      //Open window to add a new password doc
+
+      if(this.state.key !== '')
+      {
+        this.setState({
+          editWindowOpen: !this.state.editWindowOpen,
+          editIndex: index
+        });
+      } else {
+        alertify.error("Please set an encryption key!");
+      }
+    }
+
+
     fetchData() {
       //Gets password list from firestore and
       //Writes in this.state
 
       const uid = this.stores.authStore.userData.uid;
 
-      db.collection("passwords/"+uid+"/passwords").where("uid", "==", uid).orderBy("time", "desc").get().then((querySnapshot) => {
+      db.collection("passwords/"+uid+"/passwords").orderBy("time", "desc").get().then((querySnapshot) => {
         var arr = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          arr.push(data);
+          arr.push(Object.assign(data, {id:doc.id}));
         });
         this.setState({
           data: arr,
@@ -194,6 +221,9 @@ const PasswordManager = inject("rootStore") ( observer(
           const copyPassword = () => {
             copyToClipboard(decrypt(element.password, this.state.key));
           }
+          const toggleEditWindow = () => {
+            this.toggleEditWindow(index);
+          }
         
           const url = transformUrl(element.url);
           const password = decrypt(element.password, this.state.key);
@@ -201,17 +231,22 @@ const PasswordManager = inject("rootStore") ( observer(
 
           components.push(
             <Table.Row key={index}>
+             <Table.Cell>
+                <Button icon onClick={toggleEditWindow}>
+                  <Icon name='edit' />
+                </Button>
+              </Table.Cell>
               <Table.Cell>{url}</Table.Cell>
               <Table.Cell>{login}</Table.Cell>
               <Table.Cell>
-                <Button icon>
-                  <Icon onClick={copyLogin} name='copy' />
+                <Button icon onClick={copyLogin}>
+                  <Icon name='copy' />
                 </Button>
               </Table.Cell>
               <Table.Cell>{password}</Table.Cell>
               <Table.Cell>
-                <Button icon>
-                  <Icon onClick={copyPassword} name='copy' />
+                <Button icon onClick={copyPassword}>
+                  <Icon  name='copy' />
                 </Button>
               </Table.Cell>
             </Table.Row>
@@ -229,6 +264,8 @@ const PasswordManager = inject("rootStore") ( observer(
       return(
         <div>
           <New addDoc={this.addDoc} encryptionkey={this.state.key} open={this.state.newWindowOpen} toggleNewWindow={this.toggleNewWindow} />
+
+          <Edit updateDoc={this.updateDoc} data={this.state.data} editIndex={this.state.editIndex} encryptionkey={this.state.key} open={this.state.editWindowOpen} toggleEditWindow={this.toggleEditWindow} />
 
           <Headline black="Password " red="manager" />
 
@@ -261,10 +298,11 @@ const PasswordManager = inject("rootStore") ( observer(
             <Table celled striped>
               <Table.Header>
                 <Table.Row>
+                  <Table.HeaderCell width={1}></Table.HeaderCell>
                   <Table.HeaderCell width={4}>Application / URL</Table.HeaderCell>
                   <Table.HeaderCell width={5}>Username / Email adress</Table.HeaderCell>
                   <Table.HeaderCell width={1}></Table.HeaderCell>
-                  <Table.HeaderCell width={5}>Password</Table.HeaderCell>
+                  <Table.HeaderCell width={4}>Password</Table.HeaderCell>
                   <Table.HeaderCell width={1}></Table.HeaderCell>
                 </Table.Row>
               </Table.Header>

@@ -2,13 +2,13 @@ import React, {Component} from 'react';
 import { observer, inject } from 'mobx-react';
 import jss from 'jss';
 import preset from 'jss-preset-default';
-import { Segment, Container, Header, Form, Input, Button, Icon } from 'semantic-ui-react';
+import { Segment, Container, Form, Input, Button, Icon } from 'semantic-ui-react';
 import alertify from 'alertify.js';
 
 /*
 * Functions import
 */
-import { encrypt } from '../../stores/functions/encryption';
+import { encrypt, decrypt } from '../../stores/functions/encryption';
 
 /*
 * Component imports
@@ -36,17 +36,17 @@ Components -- END
 
 
 
-const New = inject("rootStore") ( observer(
-  class New extends Component {
+const Edit = inject("rootStore") ( observer(
+  class Edit extends Component {
     constructor(props){
       super(props);
-      //Add a new password window
+      //Update an existing document
 
       /*
       * Expected props
       *   - open: bool
       *       display component or not
-      *   - toggleNewWindow: function
+      *   - toggleEditWindow: function
       *       toggles window: open and close
       *   - encryptionkey: String
       *       encryption key of the password
@@ -61,7 +61,7 @@ const New = inject("rootStore") ( observer(
       this.state = {
         url: '',
         login: '',
-        password: this.generatePassword(),
+        password: '',
         loading: false
       }
 
@@ -76,42 +76,36 @@ const New = inject("rootStore") ( observer(
 
     componentWillReceiveProps(nextProps) {
       if(nextProps.open !== this.props.open) {
+        var url;
+        var login;
+        var password;
+        if(nextProps.open) {
+          url = nextProps.data[nextProps.editIndex].url;
+          login = decrypt(nextProps.data[nextProps.editIndex].login, nextProps.encryptionkey);
+          password = decrypt(nextProps.data[nextProps.editIndex].password, nextProps.encryptionkey);
+        } else {
+          url = null;
+          login = null;
+          password = null;
+        }
+
         //Empty input fields
         this.setState({
-          url: '',
-          login: '',
-          password: this.generatePassword()
+          url: url,
+          login: login,
+          password: password
         });
       }
     }
 
 
     componentDidUpdate() {
-      if(this.props.open && this.state.url === '' && this.state.login === '') {
-        document.getElementById('url').focus();
-      }
+      
     }
 
 
     componentWillUnmount() {
       this.sheet.detach()
-    }
-
-
-    generatePassword() {
-      //Creates a unique id for each chat bubble so that the animation can be triggered
-    
-      var random = "";
-      var possible = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP0123456";
-    
-      for (var i = 0; i < 16; i++)
-        random += possible.charAt(Math.floor(Math.random() * possible.length));
-    
-      while(true) {
-        if(!document.getElementById(random)) {
-          return random;
-        }
-      }
     }
 
 
@@ -127,6 +121,8 @@ const New = inject("rootStore") ( observer(
       const login = encrypt(this.state.login, this.props.encryptionkey);
       const password = encrypt(this.state.password, this.props.encryptionkey);
       const uid = this.stores.authStore.userData.uid;
+      const id = this.props.data[this.props.editIndex].id;
+      const editIndex = this.props.editIndex;
 
       //Update a doc locally with the new values
       const data = {
@@ -136,22 +132,21 @@ const New = inject("rootStore") ( observer(
         time: new Date()
       }
 
-      db.collection("passwords/"+uid+"/passwords").add(data)
-      .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-        alertify.success("Document successfully added!");
+      db.collection("passwords/"+uid+"/passwords").doc(id).set(data)
+      .then(() => {
+        console.log("Document updated");
+        alertify.success("Document successfully updated!");
 
-        //Add a new doc locally so no new data transfer from firestore
-        //is needed
-        this.props.addDoc(Object.assign(data, {id:docRef.id}));
+        //Update a doc locally with the new values
+        this.props.updateDoc(Object.assign(data, {id:id}), editIndex);
 
-        this.props.toggleNewWindow();
+        this.props.toggleEditWindow();
         this.setState({
           loading: false
         });
       })
       .catch(function(error) {
-        console.error("Error adding document: ", error);
+        console.error("Error updating the document: ", error);
         alertify.error("Something went wrong! Please check your internet connection");
         this.setState({
           loading: false
@@ -166,40 +161,40 @@ const New = inject("rootStore") ( observer(
 
     render() {
       if(this.props.open) {
+        const url = this.state.url;
+        const login = this.state.login;
+        const password = this.state.password;
+
         return(
           <div className={this.classes.box}>
             <Container text>
               <Segment padded="very">
                 <Form onSubmit={this.handleSubmit}>
-                  <Header as="h2">
-                    Add a password
-                  </Header>
-
                   <Form.Field>
                     <label>Application / URL:</label>
                     <Input iconPosition='left' placeholder='http://exmple.com'>
-                      <input value={this.state.url} type="text" name="url" id="url" onChange={this.handleChange} autoComplete="off" required />
+                      <input value={url} type="text" name="url" id="url" onChange={this.handleChange} autoComplete="off" required />
                     </Input>
                   </Form.Field>
 
                   <Form.Field>
                     <label>Username / email adress:</label>
                     <Input iconPosition='left' placeholder='example@example.com'>
-                      <input value={this.state.login} type="text" name="login" onChange={this.handleChange} autoComplete="off" required />
+                      <input value={login} type="text" name="login" onChange={this.handleChange} autoComplete="off" required />
                     </Input>
                   </Form.Field>
 
                   <Form.Field>
                     <label>Password:</label>
                     <Input iconPosition='left' placeholder='********'>
-                      <input value={this.state.password} type="text" name="password" onChange={this.handleChange} autoComplete="off" required />
+                      <input value={password} type="text" name="password" onChange={this.handleChange} autoComplete="off" required />
                     </Input>
                   </Form.Field>
 
                   <p>Login and password are going to be encrypted with the key you have set.</p>
 
-                  <Button loading={this.state.loading} type='submit' primary>Add</Button>
-                  <Button loading={this.state.loading} onClick={this.props.toggleNewWindow}><Icon name="x" />Cancel</Button>
+                  <Button loading={this.state.loading} type='submit' primary>Update</Button>
+                  <Button loading={this.state.loading} onClick={this.props.toggleEditWindow}><Icon name="x" />Cancel</Button>
                   
                 </Form>
               </Segment>
@@ -229,4 +224,4 @@ const New = inject("rootStore") ( observer(
   }
 ));
 
-export default New;
+export default Edit;
