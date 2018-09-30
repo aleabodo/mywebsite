@@ -78,6 +78,11 @@ const New = inject("rootStore") ( observer(
 
     componentWillReceiveProps(nextProps) {
       if(nextProps.open !== this.props.open) {
+        if(nextProps.open && window.innerWidth <= 700) {
+          //Scroll to top
+          window.scrollTo(0, 0);
+        }
+        
         //Empty input fields
         this.setState({
           url: '',

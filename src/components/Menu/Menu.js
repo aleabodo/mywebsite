@@ -64,6 +64,15 @@ const Main = inject("rootStore") ( observer(
       this.sheet.detach()
     }
 
+
+    componentDidUpdate() {
+      if(this.state.visible) {
+        //Scroll to top
+        window.scrollTo(0, 0);
+      }
+    }
+
+
     handleItemClick(e, { name }) {
       this.props.handleItemClick(name);
 

@@ -82,6 +82,11 @@ const Edit = inject("rootStore") ( observer(
         var login;
         var password;
         if(nextProps.open) {
+          if(window.innerWidth <= 700) {
+            //Scroll to top
+            window.scrollTo(0, 0);
+          }
+
           url = nextProps.data[nextProps.editIndex].url;
           login = decrypt(nextProps.data[nextProps.editIndex].login, nextProps.encryptionkey);
           password = decrypt(nextProps.data[nextProps.editIndex].password, nextProps.encryptionkey);

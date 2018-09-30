@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import jss from 'jss';
 import preset from 'jss-preset-default';
 import { Container } from 'semantic-ui-react';
+import history from '../../stores/functions/history';
 
 /*
 * Functions import
@@ -45,6 +46,11 @@ class Home extends Component {
     const {classes} = this.sheet.attach();
     this.classes = classes;
     //Styles
+  }
+
+  
+  componentDidMount() {
+    history.push('/');
   }
 
 

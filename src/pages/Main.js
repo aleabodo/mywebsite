@@ -56,7 +56,7 @@ class Main extends Component {
     this.classes = classes;
     //Styles
   }
-
+  
 
   componentWillUnmount() {
     this.sheet.detach()
