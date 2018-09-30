@@ -239,13 +239,13 @@ const PasswordManager = inject("rootStore") ( observer(
               <Table.Cell>{url}</Table.Cell>
               <Table.Cell>{login}</Table.Cell>
               <Table.Cell>
-                <Button icon onClick={copyLogin}>
+                <Button icon onClick={copyLogin} circular>
                   <Icon name='copy' />
                 </Button>
               </Table.Cell>
               <Table.Cell>{password}</Table.Cell>
               <Table.Cell>
-                <Button icon onClick={copyPassword}>
+                <Button icon onClick={copyPassword} circular>
                   <Icon  name='copy' />
                 </Button>
               </Table.Cell>
@@ -269,9 +269,18 @@ const PasswordManager = inject("rootStore") ( observer(
 
           <Headline black="Password " red="manager" />
 
-          <Input icon placeholder='Search...'>
-            <input type='text' id="search" placeholder='Search...' name="search" onChange={this.onChangeInput} autoComplete="off" />
+          <Input 
+            icon 
+            placeholder='Search...'
+            type='text' 
+            id="search" 
+            name="search" 
+            onChange={this.onChangeInput}
+            iconPosition='left'
+            transparent
+           >
             <Icon name='search' />
+            <input />
           </Input>
 
           <Menu attached='top'>

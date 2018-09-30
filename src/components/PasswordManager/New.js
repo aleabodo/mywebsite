@@ -9,6 +9,7 @@ import alertify from 'alertify.js';
 * Functions import
 */
 import { encrypt } from '../../stores/functions/encryption';
+import { generatePassword } from '../../stores/functions/generatePassword';
 
 /*
 * Component imports
@@ -57,11 +58,12 @@ const New = inject("rootStore") ( observer(
 
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+      this.dice = this.dice.bind(this);
 
       this.state = {
         url: '',
         login: '',
-        password: this.generatePassword(),
+        password: generatePassword(),
         loading: false
       }
 
@@ -80,7 +82,7 @@ const New = inject("rootStore") ( observer(
         this.setState({
           url: '',
           login: '',
-          password: this.generatePassword()
+          password: generatePassword()
         });
       }
     }
@@ -98,26 +100,18 @@ const New = inject("rootStore") ( observer(
     }
 
 
-    generatePassword() {
-      //Creates a unique id for each chat bubble so that the animation can be triggered
-    
-      var random = "";
-      var possible = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP0123456";
-    
-      for (var i = 0; i < 16; i++)
-        random += possible.charAt(Math.floor(Math.random() * possible.length));
-    
-      while(true) {
-        if(!document.getElementById(random)) {
-          return random;
-        }
-      }
-    }
-
-
     handleChange(e) {
       this.setState({
         [e.target.name]: e.target.value
+      });
+    }
+
+
+    dice() {
+      //Generate a new random password
+      
+      this.setState({
+        password: generatePassword()
       });
     }
 
@@ -177,23 +171,41 @@ const New = inject("rootStore") ( observer(
 
                   <Form.Field>
                     <label>Application / URL:</label>
-                    <Input iconPosition='left' placeholder='http://exmple.com'>
-                      <input value={this.state.url} type="text" name="url" id="url" onChange={this.handleChange} autoComplete="off" required />
-                    </Input>
+                    <Input 
+                      defaultValue={this.state.url} 
+                      name="url" 
+                      id="url" 
+                      onChange={this.handleChange} 
+                      type="text" 
+                      placeholder="http://alexbell.ninja"
+                      required
+                     />
                   </Form.Field>
 
                   <Form.Field>
                     <label>Username / email adress:</label>
-                    <Input iconPosition='left' placeholder='example@example.com'>
-                      <input value={this.state.login} type="text" name="login" onChange={this.handleChange} autoComplete="off" required />
-                    </Input>
+                    <Input 
+                      defaultValue={this.state.login} 
+                      name="login" 
+                      onChange={this.handleChange} 
+                      type="text" 
+                      placeholder="example@example.com"
+                      required
+                     />
                   </Form.Field>
 
                   <Form.Field>
                     <label>Password:</label>
-                    <Input iconPosition='left' placeholder='********'>
-                      <input value={this.state.password} type="text" name="password" onChange={this.handleChange} autoComplete="off" required />
-                    </Input>
+                    <Input 
+                      value={this.state.password} 
+                      name="password" 
+                      onChange={this.handleChange} 
+                      type="text" 
+                      placeholder='********' 
+                      label={<Button onClick={this.dice} type="button" icon><Icon name='random' /></Button>} 
+                      labelPosition="right" 
+                      required
+                     />
                   </Form.Field>
 
                   <p>Login and password are going to be encrypted with the key you have set.</p>

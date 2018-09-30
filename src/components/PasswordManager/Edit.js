@@ -9,6 +9,7 @@ import alertify from 'alertify.js';
 * Functions import
 */
 import { encrypt, decrypt } from '../../stores/functions/encryption';
+import { generatePassword } from '../../stores/functions/generatePassword';
 
 /*
 * Component imports
@@ -57,6 +58,7 @@ const Edit = inject("rootStore") ( observer(
 
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
+      this.dice = this.dice.bind(this);
 
       this.state = {
         url: '',
@@ -112,6 +114,15 @@ const Edit = inject("rootStore") ( observer(
     handleChange(e) {
       this.setState({
         [e.target.name]: e.target.value
+      });
+    }
+
+
+    dice() {
+      //Generate a new random password
+      
+      this.setState({
+        password: generatePassword()
       });
     }
 
@@ -172,24 +183,44 @@ const Edit = inject("rootStore") ( observer(
                 <Form onSubmit={this.handleSubmit}>
                   <Form.Field>
                     <label>Application / URL:</label>
-                    <Input iconPosition='left' placeholder='http://exmple.com'>
-                      <input value={url} type="text" name="url" id="url" onChange={this.handleChange} autoComplete="off" required />
-                    </Input>
+                    <Input 
+                      defaultValue={url} 
+                      name="url" 
+                      id="url" 
+                      onChange={this.handleChange} 
+                      type="text" 
+                      placeholder="http://alexbell.ninja"
+                      required
+                     />
                   </Form.Field>
 
                   <Form.Field>
                     <label>Username / email adress:</label>
-                    <Input iconPosition='left' placeholder='example@example.com'>
-                      <input value={login} type="text" name="login" onChange={this.handleChange} autoComplete="off" required />
-                    </Input>
+                    <Input 
+                      defaultValue={login} 
+                      name="login" 
+                      onChange={this.handleChange} 
+                      type="text" 
+                      placeholder="example@example.com"
+                      required
+                     />
                   </Form.Field>
 
                   <Form.Field>
                     <label>Password:</label>
-                    <Input iconPosition='left' placeholder='********'>
-                      <input value={password} type="text" name="password" onChange={this.handleChange} autoComplete="off" required />
-                    </Input>
+                    <Input 
+                      value={password} 
+                      name="password" 
+                      onChange={this.handleChange} 
+                      type="text" 
+                      placeholder='********' 
+                      label={<Button onClick={this.dice} type="button" icon><Icon name='random' /></Button>} 
+                      labelPosition="right" 
+                      required
+                     />
                   </Form.Field>
+
+                  
 
                   <p>Login and password are going to be encrypted with the key you have set.</p>
 
