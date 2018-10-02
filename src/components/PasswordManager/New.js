@@ -51,6 +51,10 @@ const New = inject("rootStore") ( observer(
       *       toggles window: open and close
       *   - encryptionkey: String
       *       encryption key of the password
+      *   - addDoc: function
+      *       adds a new doc locally
+      *   - toggleEditWindow: function
+      *       Open or close edit window
       */
 
       //Stored information
@@ -138,7 +142,7 @@ const New = inject("rootStore") ( observer(
       db.collection("passwords/"+uid+"/passwords").add(data)
       .then((docRef) => {
         console.log("Document written with ID: ", docRef.id);
-        alertify.success("Document successfully added!");
+        alertify.success("Document added!");
 
         //Add a new doc locally so no new data transfer from firestore
         //is needed

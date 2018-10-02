@@ -59,6 +59,7 @@ const PasswordManager = inject("rootStore") ( observer(
       this.onChangeInput = this.onChangeInput.bind(this);
       this.addDoc = this.addDoc.bind(this);
       this.updateDoc = this.updateDoc.bind(this);
+      this.deleteDoc = this.deleteDoc.bind(this);
 
       this.state = {
         newWindowOpen: false,
@@ -105,6 +106,21 @@ const PasswordManager = inject("rootStore") ( observer(
       //Update a doc locally with the new values
       var newArr = this.state.data;
       newArr[editIndex] = data;
+      this.setState({
+        data: newArr
+      });
+    }
+
+
+    deleteDoc(editIndex) {
+      //Delete doc locally
+
+      var newArr = [];
+      this.state.data.forEach(function(element, index) {
+        if(index !== editIndex) {
+          newArr.push(element);
+        }
+      });
       this.setState({
         data: newArr
       });
@@ -265,7 +281,7 @@ const PasswordManager = inject("rootStore") ( observer(
         <div>
           <New addDoc={this.addDoc} encryptionkey={this.state.key} open={this.state.newWindowOpen} toggleNewWindow={this.toggleNewWindow} />
 
-          <Edit updateDoc={this.updateDoc} data={this.state.data} editIndex={this.state.editIndex} encryptionkey={this.state.key} open={this.state.editWindowOpen} toggleEditWindow={this.toggleEditWindow} />
+          <Edit updateDoc={this.updateDoc} deleteDoc={this.deleteDoc} data={this.state.data} editIndex={this.state.editIndex} encryptionkey={this.state.key} open={this.state.editWindowOpen} toggleEditWindow={this.toggleEditWindow} />
 
           <Headline black="Password " red="manager" />
 

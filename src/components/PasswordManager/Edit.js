@@ -51,6 +51,14 @@ const Edit = inject("rootStore") ( observer(
       *       toggles window: open and close
       *   - encryptionkey: String
       *       encryption key of the password
+      *   - updateDoc: function
+      *       updates doc locally
+      *   - deleteDoc: function
+      *       deletes doc locally
+      *   - editIndex: Int
+      *       index of array with all docs. locale
+      *   - toggleEditWindow: function
+      *       Open or close edit window
       */
 
       //Stored information
@@ -59,6 +67,7 @@ const Edit = inject("rootStore") ( observer(
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
       this.dice = this.dice.bind(this);
+      this.delete = this.delete.bind(this);
 
       this.state = {
         url: '',
@@ -132,6 +141,39 @@ const Edit = inject("rootStore") ( observer(
     }
 
 
+    delete() {
+      //Delete doc
+
+      alertify.confirm("Are you sure?", () => {
+        const id = this.props.data[this.props.editIndex].id;
+        const uid = this.stores.authStore.userData.uid;
+        const editIndex = this.props.editIndex;
+
+        db.collection("passwords/"+uid+"/passwords").doc(id).delete().then(() => {
+          //Delete doc locally
+          this.props.deleteDoc(editIndex);
+
+          this.props.toggleEditWindow();
+          
+          alertify.success("Document removed!");
+          this.setState({
+            loading: false
+          });
+        }).catch((error) => {
+          console.error("Error updating the document: ", error);
+          alertify.error("Something went wrong! Please check your internet connection");
+          this.setState({
+            loading: false
+          });
+        });
+
+        this.setState({
+          loading: true
+        });
+      });
+    }
+
+
     handleSubmit() {
       const url = this.state.url;
       const login = encrypt(this.state.login, this.props.encryptionkey);
@@ -151,7 +193,7 @@ const Edit = inject("rootStore") ( observer(
       db.collection("passwords/"+uid+"/passwords").doc(id).set(data)
       .then(() => {
         console.log("Document updated");
-        alertify.success("Document successfully updated!");
+        alertify.success("Document updated!");
 
         //Update a doc locally with the new values
         this.props.updateDoc(Object.assign(data, {id:id}), editIndex);
@@ -225,12 +267,15 @@ const Edit = inject("rootStore") ( observer(
                      />
                   </Form.Field>
 
-                  
-
                   <p>Login and password are going to be encrypted with the key you have set.</p>
 
                   <Button loading={this.state.loading} type='submit' primary>Update</Button>
-                  <Button loading={this.state.loading} onClick={this.props.toggleEditWindow}><Icon name="x" />Cancel</Button>
+                  <Button loading={this.state.loading} type="button" onClick={this.props.toggleEditWindow}><Icon name="x" />Cancel</Button>
+
+                  <br />
+                  <br />
+
+                  <Button loading={this.state.loading} type="button" onClick={this.delete} icon color="red"><Icon name="trash alternate" /></Button>
                   
                 </Form>
               </Segment>
@@ -249,7 +294,7 @@ const Edit = inject("rootStore") ( observer(
           width: '100vw',
           height: '100vh',
           position: 'fixed',
-          zIndex: 1000,
+          zIndex: 1,
           top: 0,
           left: 0,
           backgroundColor: 'rgba(255,255,255,0.9)',
