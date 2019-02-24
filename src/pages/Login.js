@@ -11,7 +11,6 @@ import { Container, Button, Form, Header, Segment, Input, Icon } from 'semantic-
 /*
 * Component imports
 */
-import LoadingPage from '../components/loadingPage';
 import Headline from '../components/Headline';
 
 jss.setup(preset());
@@ -103,7 +102,6 @@ const Login = inject("rootStore") ( observer(
     render() {
       return(
         <div>
-          <LoadingPage />
           <Container className={this.classes.container}>
             <Segment padded="very">
               <Form onSubmit={this.handleSubmit}>

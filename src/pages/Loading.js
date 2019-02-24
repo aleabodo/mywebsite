@@ -74,7 +74,7 @@ class Loading extends Component {
         position: 'relative',
         width: '100vw',
         height: '100vh',
-        backgroundColor: 'black'
+        backgroundColor: 'white'
       },
 
       loadingContent: {

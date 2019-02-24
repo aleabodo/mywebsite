@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { observer, inject } from 'mobx-react';
 import jss from 'jss';
 import preset from 'jss-preset-default';
-import { Menu, Segment, Dropdown, Table, Button, Loader, Icon, Header, Input } from 'semantic-ui-react';
+import { Menu, Segment, Dropdown, Table, Button, Loader, Icon, Header, Input, Checkbox } from 'semantic-ui-react';
 import alertify from 'alertify.js';
 import ReactHtmlParser from 'react-html-parser';
 
@@ -60,6 +60,7 @@ const PasswordManager = inject("rootStore") ( observer(
       this.addDoc = this.addDoc.bind(this);
       this.updateDoc = this.updateDoc.bind(this);
       this.deleteDoc = this.deleteDoc.bind(this);
+      this.togglePasswordDisplay = this.togglePasswordDisplay.bind(this);
 
       this.state = {
         newWindowOpen: false,
@@ -68,7 +69,8 @@ const PasswordManager = inject("rootStore") ( observer(
         key: '',
         search: '',
         data: [],
-        loading: true
+        loading: true,
+        togglePasswordDisplay: false
       }
 
       //Styles
@@ -150,6 +152,14 @@ const PasswordManager = inject("rootStore") ( observer(
     }
 
 
+    togglePasswordDisplay() {
+      const oldState = this.state.togglePasswordDisplay;
+      this.setState({
+        togglePasswordDisplay: !oldState
+      });
+    }
+
+
     toggleEditWindow(index) {
       //Open window to add a new password doc
 
@@ -181,6 +191,8 @@ const PasswordManager = inject("rootStore") ( observer(
           data: arr,
           loading: false
         });
+      }).catch(function() {
+        alertify.error("Data could not be loaded. Please check your internet connection");
       });
     }
 
@@ -230,19 +242,27 @@ const PasswordManager = inject("rootStore") ( observer(
       }
       
       dataList.forEach((element, index) => {
+        const passwordDecrypted = decrypt(element.password, this.state.key)
+
         if(element.url.toLowerCase().includes(this.state.search.toLowerCase())) {
           const copyLogin = () => {
             copyToClipboard(decrypt(element.login, this.state.key));
           } 
           const copyPassword = () => {
-            copyToClipboard(decrypt(element.password, this.state.key));
+            copyToClipboard(passwordDecrypted);
           }
           const toggleEditWindow = () => {
             this.toggleEditWindow(index);
           }
         
           const url = transformUrl(element.url);
-          const password = decrypt(element.password, this.state.key);
+
+          //If password display toggled off: Display dots
+          //Otherwise display decrypted password
+          var password = <div>&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;</div>;
+          if(this.state.togglePasswordDisplay) {
+            password = passwordDecrypted;
+          }
           const login = decrypt(element.login, this.state.key);
 
           components.push(
@@ -327,7 +347,7 @@ const PasswordManager = inject("rootStore") ( observer(
                   <Table.HeaderCell width={4}>Application / URL</Table.HeaderCell>
                   <Table.HeaderCell width={5}>Username / Email adress</Table.HeaderCell>
                   <Table.HeaderCell width={1}></Table.HeaderCell>
-                  <Table.HeaderCell width={4}>Password</Table.HeaderCell>
+                  <Table.HeaderCell width={4}>Password <br /> <Checkbox toggle onChange={this.togglePasswordDisplay} /></Table.HeaderCell>
                   <Table.HeaderCell width={1}></Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
