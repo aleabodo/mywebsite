@@ -27,7 +27,7 @@ catch (err) {
   fb = firebase.initializeApp(config);
   const firestore = firebase.firestore();
 
-  const settings = {timestampsInSnapshots: true};
+  const settings = {};
   firestore.settings(settings);
 }
 

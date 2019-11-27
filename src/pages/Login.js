@@ -163,10 +163,10 @@ const Login = inject("rootStore") ( observer(
       return {
         container: {
           padding: '0%',
-          paddingTop: '15%',
+          paddingTop: '100px',
+          width: '100%',
           '@media (min-width: 500px)': {
-            padding: '20%',
-            paddingTop: '10%',
+            width: '500px !important'
           }
         },
 

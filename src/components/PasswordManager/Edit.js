@@ -85,7 +85,7 @@ const Edit = inject("rootStore") ( observer(
     }
     
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
       if(nextProps.open !== this.props.open) {
         var url;
         var login;

@@ -80,7 +80,7 @@ const New = inject("rootStore") ( observer(
     }
     
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
       if(nextProps.open !== this.props.open) {
         if(nextProps.open && window.innerWidth <= 700) {
           //Scroll to top
@@ -239,7 +239,7 @@ const New = inject("rootStore") ( observer(
           width: '100vw',
           height: '100vh',
           position: 'fixed',
-          zIndex: 1000,
+          zIndex: 1,
           top: 0,
           left: 0,
           backgroundColor: 'rgba(255,255,255,0.9)',

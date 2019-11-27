@@ -93,7 +93,7 @@ class AuthStore {
                 reject(error);
               });
             }).catch(function(error) {
-              alertify.error("Something went wrong. Please check your internet connection");
+              alertify.error(error.message);
               reject(error);
             });
           }
