@@ -359,6 +359,8 @@ const PasswordManager = inject("rootStore") ( observer(
             </Table>
             <Loader active={this.state.loading} />
           </Segment>
+
+          <p><i>Rijndael 128 bit</i> client-side encrypted!</p>
         </div>
       );
     }

@@ -59,7 +59,7 @@ class Home extends Component {
         <Headline black="alexbell." red="ninja" />
 
         <p>
-          Yo, what's up? Ninja here! What can you do here? Feel free
+          Yo, what's up? Ninja here! Feel free
           to browse around a little and try some of what you can find here :)
         </p>
       </Container>

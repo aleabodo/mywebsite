@@ -155,6 +155,10 @@ const Main = inject("rootStore") ( observer(
                 Password manager
               </Menu.Item>
 
+              <Menu.Item name='/c' active={activeItem === '/c'} onClick={this.handleItemClick} as='a'>
+                Csgo skins
+              </Menu.Item>
+
               <Menu.Menu>
                 <Menu.Item>
                   <Button primary onClick={this.stores.authStore.signOut}>Sign out</Button>
