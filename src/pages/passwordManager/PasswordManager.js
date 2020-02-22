@@ -295,7 +295,7 @@ const PasswordManager = inject("rootStore") ( observer(
 
 
     render() {
-      const tableRows = this.displayData(this.state.data)
+      const tableRows = this.displayData(this.state.data);
 
       return(
         <div>
@@ -314,6 +314,7 @@ const PasswordManager = inject("rootStore") ( observer(
             onChange={this.onChangeInput}
             iconPosition='left'
             transparent
+            autoComplete="off"
            >
             <Icon name='search' />
             <input />
@@ -358,28 +359,6 @@ const PasswordManager = inject("rootStore") ( observer(
             </Table>
             <Loader active={this.state.loading} />
           </Segment>
-
-          <Header as="h3">
-            How does it work? Is it safe?
-          </Header>
-          <p>
-            I ask you to give an encryption key. Once you set that key you can create a new password which is then encrypted with that key.
-          </p>
-          <p>
-            The password is then saved in the encrypted form on the database in the internet, which means that nobody (not even me) can read your password unless that person knows the key. In other words: <b>The password is completely safe and solely accessible by you and only you!</b>
-          </p>
-          <p>
-            To decrypt your passwords simply type in the encryption key and all your passwords in your list are displayed correctly and readable in the form you had set them.
-          </p>
-          <hr />
-          <p>
-            <b>I advise you to choose one encryption key and use it for all your passwords in your list.</b> Why? Using the same key makes decrypting easier for you because <b>all</b> entries are being decrypted correctly at the same time by using one single key.
-          </p>
-          <hr />
-          <p>
-            <b>For nerds: </b><a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard" target="_blank" rel="noopener noreferrer">AES (Rijndael cipher) </a>
-            encrypted with a 128 bits key, 10 rounds and a blocksize of 128 bits. Established by the U.S. NIST in 2001 and approved by the NSA for "top secret" information.
-          </p>
         </div>
       );
     }

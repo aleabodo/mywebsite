@@ -15,6 +15,7 @@ import history from '../stores/functions/history';
 import Menu from '../components/Menu/Menu';
 import Home from './home/Home';
 import PasswordManager from './passwordManager/PasswordManager';
+import CsgoSkins from './csgoSkins/CsgoSkins';
 
 jss.setup(preset());
 
@@ -77,6 +78,7 @@ class Main extends Component {
               <Switch>
                 <Route exact path="/" component={Home} />
                 <Route path="/p" component={PasswordManager} />
+                <Route path="/c" component={CsgoSkins} />
               </Switch>
               <img alt="" className={this.classes.ninja} src={require('../files/images/ninja.svg')} />
             </Segment>

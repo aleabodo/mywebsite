@@ -115,6 +115,10 @@ const Main = inject("rootStore") ( observer(
               <Menu.Item name='/p' active={activeItem === '/p'} onClick={this.handleItemClick} as='a'>
                 Password manager
               </Menu.Item>
+
+              <Menu.Item name='/c' active={activeItem === '/c'} onClick={this.handleItemClick} as='a'>
+                Csgo skins
+              </Menu.Item>
     
               <Menu.Menu position='right'>
                 <Menu.Item>

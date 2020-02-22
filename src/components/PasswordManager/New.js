@@ -53,8 +53,6 @@ const New = inject("rootStore") ( observer(
       *       encryption key of the password
       *   - addDoc: function
       *       adds a new doc locally
-      *   - toggleEditWindow: function
-      *       Open or close edit window
       */
 
       //Stored information
@@ -188,6 +186,7 @@ const New = inject("rootStore") ( observer(
                       type="text" 
                       placeholder="http://alexbell.ninja"
                       required
+                      autoComplete="off"
                      />
                   </Form.Field>
 
@@ -214,6 +213,7 @@ const New = inject("rootStore") ( observer(
                       label={<Button onClick={this.dice} type="button" icon><Icon name='random' /></Button>} 
                       labelPosition="right" 
                       required
+                      autoComplete="off"
                      />
                   </Form.Field>
 
@@ -239,7 +239,7 @@ const New = inject("rootStore") ( observer(
           width: '100vw',
           height: '100vh',
           position: 'fixed',
-          zIndex: 1,
+          zIndex: 3,
           top: 0,
           left: 0,
           backgroundColor: 'rgba(255,255,255,0.9)',

@@ -59,9 +59,7 @@ class Home extends Component {
         <Headline black="alexbell." red="ninja" />
 
         <p>
-          You are signed in on alexbell.ninja. <b>What can you do here?</b><br />
-          Well, I like developing software in my freetime, mainly applications
-          for my personal use. They might also be of advantage for you, so feel free
+          Yo, what's up? Ninja here! What can you do here? Feel free
           to browse around a little and try some of what you can find here :)
         </p>
       </Container>

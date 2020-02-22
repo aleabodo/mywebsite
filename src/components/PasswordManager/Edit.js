@@ -57,8 +57,8 @@ const Edit = inject("rootStore") ( observer(
       *       deletes doc locally
       *   - editIndex: Int
       *       index of array with all docs. locale
-      *   - toggleEditWindow: function
-      *       Open or close edit window
+      *   - data: []
+      *       all local doc data. data[editIndex] is the doc, that is to be edited
       */
 
       //Stored information
@@ -238,6 +238,7 @@ const Edit = inject("rootStore") ( observer(
                       type="text" 
                       placeholder="http://alexbell.ninja"
                       required
+                      autoComplete="off"
                      />
                   </Form.Field>
 
@@ -262,7 +263,8 @@ const Edit = inject("rootStore") ( observer(
                       type="text" 
                       placeholder='********' 
                       label={<Button onClick={this.dice} type="button" icon><Icon name='random' /></Button>} 
-                      labelPosition="right" 
+                      labelPosition="right"
+                      autoComplete="off"
                       required
                      />
                   </Form.Field>
@@ -294,7 +296,7 @@ const Edit = inject("rootStore") ( observer(
           width: '100vw',
           height: '100vh',
           position: 'fixed',
-          zIndex: 1,
+          zIndex: 3,
           top: 0,
           left: 0,
           backgroundColor: 'rgba(255,255,255,0.9)',
